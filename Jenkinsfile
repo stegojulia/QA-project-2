@@ -9,16 +9,16 @@ pipeline {
         stage('Test') {
             steps {
                 dir('service-1') {
-                    sh DATABASE_URL="sqlite:///test.db" pytest 
+                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
                 }
                 dir('service-2') {
-                    sh DATABASE_URL="sqlite:///test.db" pytest 
+                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
                 }
                 dir('service-3') {
-                    sh DATABASE_URL="sqlite:///test.db" pytest 
+                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
                 }
                 dir('service-4') {
-                    sh DATABASE_URL="sqlite:///test.db" pytest 
+                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
                 }
             }
         }
