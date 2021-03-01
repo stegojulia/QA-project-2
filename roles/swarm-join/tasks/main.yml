@@ -1,0 +1,8 @@
+---
+# tasks file for swarm-join
+- name: Add nodes
+  docker_swarm:
+    state: join
+    advertise_addr: 35.199.180.194
+    join_token: "{{ hostvars['35.247.22.119']['result']['swarm_facts']['JoinTokens']['Worker'] }}"
+    remote_addrs: [ '10.138.0.26:2377' ]

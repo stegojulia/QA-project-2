@@ -1,0 +1,36 @@
+all:
+  children:
+
+    manager:
+      hosts:
+        35.247.22.119:
+      vars:
+        ansible_user: julia
+        ansible_ssh_private_key_file: '~/.ssh/ansible_id_rsa'
+        ansible_python_interpreter: /usr/bin/python3 
+
+    worker:
+      hosts:
+        35.199.180.194:
+      vars:
+        ansible_user: julia
+        ansible_ssh_private_key_file: '~/.ssh/ansible_id_rsa'
+        ansible_python_interpreter: /usr/bin/python3 
+
+    nginx:
+      hosts:
+        34.82.117.37:
+      vars:
+        ansible_user: julia
+        ansible_ssh_private_key_file: '~/.ssh/ansible_id_rsa'
+        ansible_python_interpreter: /usr/bin/python3 
+
+    jenkins:
+      hosts:
+        10.138.0.23:
+      vars:
+        ansible_user: julia
+        ansible_ssh_private_key_file: '~/.ssh/ansible_id_rsa'
+        ansible_python_interpreter: /usr/bin/python3 
+
+      
