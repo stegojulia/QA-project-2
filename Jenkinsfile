@@ -14,16 +14,16 @@ pipeline {
                 sh "pip3 install -r requirements.txt"
                 
                 dir('service-1') {
-                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
+                    sh "DATABASE_URL=\"sqlite:///test.db\" /var/lib/jenkins/.local/bin/pytest"
                 }
                 dir('service-2') {
-                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
+                    sh "DATABASE_URL=\"sqlite:///test.db\" /var/lib/jenkins/.local/bin/pytest"
                 }
                 dir('service-3') {
-                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
+                    sh "DATABASE_URL=\"sqlite:///test.db\" /var/lib/jenkins/.local/bin/pytest"
                 }
                 dir('service-4') {
-                    sh "DATABASE_URL=\"sqlite:///test.db\" pytest"
+                    sh "DATABASE_URL=\"sqlite:///test.db\" /var/lib/jenkins/.local/bin/pytest"
                 }
             }
         }
