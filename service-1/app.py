@@ -8,10 +8,15 @@ import requests
 from sqlalchemy.ext.automap import automap_base
 import requests
 
+import git
+repo = git.Repo(search_parent_directories=True)
+branch = repo.active_branch
+sha = repo.head.object.hexsha
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:julia123@database:3306/spanish_app"
 
 db = SQLAlchemy(app)
 
@@ -37,8 +42,8 @@ def home():
     review_data = Review(word=word.text, revision_date=datetime.datetime.now())
     db.session.add(review_data)
     db.session.commit()
-    version = 'version A'
-    return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version)
+    version = 'version B'
+    return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version,commit=sha,branch=branch.name)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5011)
