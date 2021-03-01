@@ -24,9 +24,9 @@ Vocab = Base.classes.vocab
 @app.route('/sentence/', methods=['GET', 'POST'])
 def generate_sentence():
     word = request.data.decode('utf-8')
-    translation = db.session.query(Vocab).filter(Vocab.es_word==word)
+    translation = db.session.query(Vocab).filter(Vocab.en_word==word)
     words = [i for i in translation][0]
-    return  Response(str(words.en_word), mimetype="text/plain")
+    return  Response(str(words.es_word), mimetype="text/plain")
 
 
 if __name__ == "__main__":
