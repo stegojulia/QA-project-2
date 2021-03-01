@@ -24,12 +24,17 @@ def learning():
     word = request.data.decode('latin-1')
     like_word = '%' + word + '%'
     try:
-        all_records = db.session.query(Review).filter(Review.word==word)
-        records = [i.revision_date for i in all_records]
-        record = str(records[-2])
+        all_records = db.session.query(Review).filter(Review.word==word).count()
+        if all_records == 0:
+            return "New word: review in 2 days"
+        if all_records == 1:
+            return "Review in 7 days"
+        if all_records ==2:
+            return "Review in 14 days"
+        else:
+            return "Review in 30 days"
     except:
-        return "New word"
-    return Response(str(record))
+        return "New word: review in 2 days"
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5003)
