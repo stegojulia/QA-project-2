@@ -17,19 +17,15 @@ db = SQLAlchemy(app)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
-Sentences = Base.classes.sentences
+Vocab = Base.classes.vocab
 
 
 @app.route('/sentence/', methods=['GET', 'POST'])
 def generate_sentence():
-    word = request.data.decode('latin-1')
-    like_word = '%' + word + '%'
-    all_sentences = db.session.query(Sentences).filter(Sentences.es_sentence.like(like_word))
-    sentences = [i.es_sentence for i in all_sentences]
-    try:
-       return Response(str(random.choice(sentences)))
-    except:
-       return "Make up your own sentence"
+    word = request.data.decode('utf-8')
+    translation = db.session.query(Vocab).filter(Vocab.en_word==word)
+    words = [i for i in translation][0]
+    return  Response(str(words.es_word), mimetype="text/plain")
 
 
 if __name__ == "__main__":
