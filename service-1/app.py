@@ -37,7 +37,7 @@ def home():
     review_data = Review(word=word.text, revision_date=datetime.datetime.now())
     db.session.add(review_data)
     db.session.commit()
-    version = 'version B'
+    version = 'version A'
     return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version)
 
 if __name__ == "__main__":
