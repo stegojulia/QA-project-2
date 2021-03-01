@@ -11,7 +11,7 @@ import requests
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:julia123@database:3306/spanish_app"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app"
 
 db = SQLAlchemy(app)
 
