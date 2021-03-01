@@ -18,11 +18,12 @@ Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Vocab = Base.classes.vocab
 
-@app.route('/word', methods=['GET'])
+
+@app.route('/word/', methods=['GET', 'POST'])
 def generate_word():
     all_words = db.session.query(Vocab).all()
     random_result = random.choice(all_words)
-    random_word = random_result.en_word
+    random_word = random_result.es_word
     return Response(random_word, mimetype="text/plain")
 
 if __name__ == "__main__":
