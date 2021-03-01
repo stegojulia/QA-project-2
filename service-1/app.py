@@ -8,11 +8,6 @@ import requests
 from sqlalchemy.ext.automap import automap_base
 import requests
 
-import git
-repo = git.Repo(search_parent_directories=True)
-branch = repo.active_branch
-sha = repo.head.object.hexsha
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
@@ -43,7 +38,7 @@ def home():
     db.session.add(review_data)
     db.session.commit()
     version = 'version B'
-    return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version,commit=sha,branch=branch.name)
+    return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5011)
