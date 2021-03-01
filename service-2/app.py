@@ -1,3 +1,4 @@
+import os
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
 import random
@@ -9,14 +10,13 @@ from sqlalchemy.ext.automap import automap_base
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL",default="mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app")
 
 db = SQLAlchemy(app)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Vocab = Base.classes.vocab
-Review = Base.classes.review
 
 @app.route('/word', methods=['GET'])
 def generate_word():

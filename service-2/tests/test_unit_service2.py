@@ -18,11 +18,8 @@ c.execute('''CREATE TABLE IF NOT EXISTS vocab
              (id integer AUTO_INCREMENT PRIMARY KEY, es_word text, en_word text)''')
 
 
-
 # Save (commit) the changes
 conn.commit()
-
-
 
 from app import app,Vocab,db
 
@@ -50,25 +47,7 @@ class TestBase(TestCase):
         db.drop_all()
 
 class TestResponse(TestBase):
-    def test_abuelo(self):
-        response = self.client.post(
-            url_for('generate_sentence'), data="abuelo", follow_redirects=True
-        )
-
-        self.assertEqual(response.data, b'grandfather')
-
-class TestResponse(TestBase):
-    def test_abuela(self):
-        response = self.client.post(
-            url_for('generate_sentence'), data="abuela", follow_redirects=True
-        )
-
-        self.assertEqual(response.data, b'grandmother')
-
-class TestResponse(TestBase):
-    def test_madre(self):
-        response = self.client.post(
-            url_for('generate_sentence'), data="madre", follow_redirects=True
-        )
-
-        self.assertEqual(response.data, b"mother")
+    def test_words(self):
+        all_words = [(bytes(i.en_word,'utf-8')) for i in db.session.query(Vocab).all()]
+        response = self.client.get(url_for('generate_word')) 
+        self.assertIn(response.data, all_words)
