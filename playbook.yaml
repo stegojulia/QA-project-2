@@ -1,0 +1,21 @@
+- hosts: all
+  roles:
+    - docker
+- hosts: manager
+  roles:
+    - swarm-init
+- hosts: worker
+  roles:
+    - swarm-join
+- hosts: nginx
+  roles:
+    - webserver
+- hosts: jenkins
+  roles:
+    - image-build
+- hosts: manager
+  roles:
+    - docker-stack
+
+
+

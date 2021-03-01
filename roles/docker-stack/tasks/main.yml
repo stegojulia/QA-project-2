@@ -1,0 +1,21 @@
+---
+# tasks file for docker-stack
+
+
+- pip:
+    name: jsondiff
+
+- name: Copy compose file
+  copy:
+    src: ./docker-compose.yaml
+    dest: ./docker-compose.yaml
+    owner: julia
+    group: julia
+    mode: '0644'
+
+- name: Deploy stack from a compose file
+  docker_stack:
+    state: present
+    name: mystack
+    compose:
+      - docker-compose.yaml

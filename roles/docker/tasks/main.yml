@@ -1,0 +1,55 @@
+- name: 'install dependencies'
+  apt:
+    pkg:
+    - apt-transport-https 
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3
+    - python3-pip
+    - python3-setuptools
+    - python3-docker
+    update_cache: yes
+  become: yes
+- name: 'get the docker apt'
+  apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+  become: yes
+- name: 'add the apt repo'
+  apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu focal stable
+      state: present
+  become: yes
+- name: "install docker-ce"
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: true
+  become: yes
+- name: "Docker is started"
+  service:
+    name: docker
+    state: started
+  become: yes
+- name: "Install Dockers pip package"
+  pip:
+    name: docker
+    executable: pip3 
+- name: "adding julia user to docker group"
+  user:
+    name: julia
+    groups: docker
+    append: yes
+  become: yes
+- name: "adding ubuntu user to docker group"
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes
+  become: yes
+- name: "reset the connection"
+  meta: reset_connection
+  become: yes
+
+    

@@ -1,0 +1,48 @@
+---
+# tasks file for image-build
+
+- name: Log into DockerHub
+  docker_login:
+    username: stegojulia
+    password: Yl17LPeJ8mgr
+    email: j.z.jablonska@gmail.com
+
+- name: Build an image for service 1 and push it to a repo
+  docker_image:
+    force_source: yes
+    build:
+      path: ./Learn-Spanish-Vocab/service-1
+    name: stegojulia/project2s1
+    tag: latest
+    push: yes
+    source: build
+
+- name: Build an image for service 2 and push it to a repo
+  docker_image:
+    force_source: yes
+    build:
+      path: ./Learn-Spanish-Vocab/service-2
+    name: stegojulia/project2s2
+    tag: latest
+    push: yes
+    source: build
+
+- name: Build an image for service 3 and push it to a repo
+  docker_image:
+    force_source: yes
+    build:
+      path: ./Learn-Spanish-Vocab/service-3
+    name: stegojulia/project2s3
+    tag: latest
+    push: yes
+    source: build
+
+- name: Build an image for service 4 and push it to a repo
+  docker_image:
+    force_source: yes
+    build:
+      path: ./Learn-Spanish-Vocab/service-4
+    name: stegojulia/project2s4
+    tag: latest
+    push: yes
+    source: build  
