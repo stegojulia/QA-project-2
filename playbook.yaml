@@ -10,8 +10,7 @@
 - hosts: nginx
   roles:
     - webserver
-- hosts: localhost
-  connection: local 
+- hosts: jenkins
   roles:
     - image-build
 - hosts: manager
