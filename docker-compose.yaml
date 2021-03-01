@@ -4,8 +4,6 @@ services:
     image: stegojulia/project2s2
     deploy: 
       replicas: 3
-      update_config:
-        order: start-first
     build: ./service-2
     ports:
     - 5012:5012
@@ -14,8 +12,6 @@ services:
     image: stegojulia/project2s1
     deploy: 
       replicas: 3
-      update_config:
-        order: start-first
     build: ./service-1
     ports:
     - 5011:5011
@@ -28,8 +24,6 @@ services:
     image: stegojulia/project2s3
     deploy: 
       replicas: 3
-      update_config:
-        order: start-first
     build: ./service-3
     ports:
     - 5002:5002
@@ -40,8 +34,6 @@ services:
     image: stegojulia/project2s4
     deploy: 
       replicas: 3
-      update_config:
-        order: start-first
     build: ./service-4
     ports:
     - 5003:5003
