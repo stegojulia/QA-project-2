@@ -119,20 +119,20 @@ To simulate the database I decided to build a mock database with sqllite and pop
 This didn't solve the problem of the import failing when trying to connect to the original database. This was even more difficult to solve. In the end I managed to try and prevent it from connecting to the managed database by using an environmental variable in the connection strings in the apps, defaulting to the managed database's ip if no variable is provided. I then run pytest with the environmental variable of 'sqllite:///test.db' to 'intercept' the connection.
 
 ```app.config['KEY'] = 'KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", default="mysql+pymysql://julia:pass@XXXXL:3306/spanish_app```
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", default="mysql+pymysql://julia:pass@XXXXL:3306/spanish_app
+```
 This allowed me to test against a mockdatabase. One feature still missing is testing whether data added inside service #1 is actually being added to the database so this will need to be added.
 
 
 Testing is included in the Jenkins pipeline so it is rerun with every build. Here are the results for each service test with coverage:
 
-<img src="Images/test-1" alt="unit testing results" class="center" style="width:20;">
+<img src="Images/test-1.png" alt="unit testing results" class="center" style="width:20;">
 
-<img src="Images/test-2" alt="unit testing results" class="center" style="width:20;">
+<img src="Images/test-2.png" alt="unit testing results" class="center" style="width:20;">
 
-<img src="Images/test-3" alt="unit testing results" class="center" style="width:20;">
+<img src="Images/test-3.png" alt="unit testing results" class="center" style="width:20;">
 
-<img src="Images/test-4" alt="unit testing results" class="center" style="width:20;">
+<img src="Images/test-4.png" alt="unit testing results" class="center" style="width:20;">
 
 ## Environment provisioning and deployment
 
@@ -146,6 +146,141 @@ The environmental provisioning and deployment were both carried out inside an An
 * docker-stack - deploys the stack with 3 replicas per service
 
 One disadvantage of my approach was that the Jenkins machine, which was used to run the deployment on, had to be set up manually. This makes the app less portable. The builds also take more time because each time Ansible has to check that the environment is up to the specification. However, I thought that Ansible worked pretty well for the deployment. I think that a better approach would be to use two Ansible playbooks: one to provision the environment for all machines, including the Jenkins VM; and another one for deployment.
+
+```[project-2] $ ansible-playbook ./playbook.yaml -i ./inventory.yaml -b --become-user root
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [34.82.117.37]
+ok: [35.247.22.119]
+ok: [35.199.180.194]
+ok: [10.138.0.29]
+
+TASK [docker : install dependencies] *******************************************
+ok: [35.247.22.119]
+ok: [34.82.117.37]
+ok: [35.199.180.194]
+ok: [10.138.0.29]
+
+TASK [docker : get the docker apt] *********************************************
+ok: [35.247.22.119]
+ok: [35.199.180.194]
+ok: [34.82.117.37]
+ok: [10.138.0.29]
+
+TASK [docker : add the apt repo] ***********************************************
+ok: [34.82.117.37]
+ok: [35.247.22.119]
+ok: [35.199.180.194]
+ok: [10.138.0.29]
+
+TASK [docker : install docker-ce] **********************************************
+ok: [35.247.22.119]
+ok: [34.82.117.37]
+ok: [35.199.180.194]
+ok: [10.138.0.29]
+
+TASK [docker : Docker is started] **********************************************
+ok: [35.199.180.194]
+ok: [35.247.22.119]
+ok: [34.82.117.37]
+ok: [10.138.0.29]
+
+TASK [docker : Install Dockers pip package] ************************************
+ok: [35.247.22.119]
+ok: [35.199.180.194]
+ok: [34.82.117.37]
+ok: [10.138.0.29]
+
+TASK [docker : adding julia user to docker group] ******************************
+ok: [35.199.180.194]
+ok: [35.247.22.119]
+ok: [34.82.117.37]
+ok: [10.138.0.29]
+
+TASK [docker : adding ubuntu user to docker group] *****************************
+ok: [35.247.22.119]
+ok: [34.82.117.37]
+ok: [35.199.180.194]
+ok: [10.138.0.29]
+
+PLAY [manager] *****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [35.247.22.119]
+
+TASK [swarm-init : Init a new swarm with default parameters] *******************
+ok: [35.247.22.119]
+
+TASK [swarm-init : pass on join_token] *****************************************
+ok: [35.247.22.119]
+
+PLAY [worker] ******************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [35.199.180.194]
+
+TASK [swarm-join : Add nodes] **************************************************
+ok: [35.199.180.194]
+
+PLAY [nginx] *******************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [34.82.117.37]
+
+TASK [webserver : Install NGINX] ***********************************************
+ok: [34.82.117.37]
+
+TASK [webserver : Add nginx conf] **********************************************
+ok: [34.82.117.37]
+
+TASK [webserver : Start NGINX Service] *****************************************
+ok: [34.82.117.37]
+
+PLAY [jenkins] *****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [10.138.0.29]
+
+TASK [image-build : Log into DockerHub] ****************************************
+ok: [10.138.0.29]
+
+TASK [image-build : Build an image for service 1 and push it to a repo] ********
+[WARNING]: The default for build.pull is currently 'yes', but will be changed
+to 'no' in Ansible 2.12. Please set build.pull explicitly to the value you
+need.
+changed: [10.138.0.29]
+
+TASK [image-build : Build an image for service 2 and push it to a repo] ********
+changed: [10.138.0.29]
+
+TASK [image-build : Build an image for service 3 and push it to a repo] ********
+changed: [10.138.0.29]
+
+TASK [image-build : Build an image for service 4 and push it to a repo] ********
+changed: [10.138.0.29]
+
+PLAY [manager] *****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [35.247.22.119]
+
+TASK [docker-stack : pip] ******************************************************
+ok: [35.247.22.119]
+
+TASK [docker-stack : Copy compose file] ****************************************
+ok: [35.247.22.119]
+
+TASK [docker-stack : Deploy stack from a compose file] *************************
+changed: [35.247.22.119]
+
+PLAY RECAP *********************************************************************
+10.138.0.29                : ok=15   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+34.82.117.37               : ok=13   changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+35.199.180.194             : ok=11   changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+35.247.22.119              : ok=16   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
 
 # Evaluation
 
