@@ -52,23 +52,23 @@ class TestBase(TestCase):
 class TestResponse(TestBase):
     def test_abuelo(self):
         response = self.client.post(
-            url_for('generate_sentence'), data="abuelo", follow_redirects=True
+            url_for('generate_sentence'), data="grandfather", follow_redirects=True
         )
 
-        self.assertEqual(response.data, b'grandfather')
+        self.assertEqual(response.data, b'abuelo')
 
 class TestResponse(TestBase):
     def test_abuela(self):
         response = self.client.post(
-            url_for('generate_sentence'), data="abuela", follow_redirects=True
+            url_for('generate_sentence'), data="grandmother", follow_redirects=True
         )
 
-        self.assertEqual(response.data, b'grandmother')
+        self.assertEqual(response.data, b'abuela')
 
 class TestResponse(TestBase):
     def test_madre(self):
         response = self.client.post(
-            url_for('generate_sentence'), data="madre", follow_redirects=True
+            url_for('generate_sentence'), data="mother", follow_redirects=True
         )
 
-        self.assertEqual(response.data, b"mother")
+        self.assertEqual(response.data, b"madre")
