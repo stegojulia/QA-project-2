@@ -101,8 +101,6 @@ Some issues included:
 
 * When combining the services to work together I encountered frequent errors whenever the generated word contained special characters. This was an encoding issue which I resolved by decoding in 'latin-1'.
 
-* Whilst most words have corresponding sentences some do not, which produced index errors. For now I decided to catch those errors and display a message that sentences for the word are yet to be added. I would like to change it to generating a different word when a sentence is not available until more sentences are added to the database but it's not essential for MVP.
-
 ## Unit testing
 
 Some things that needed to be tested were:
@@ -116,11 +114,6 @@ Unit testing presented quite a challenge. Each service makes use of the managed 
 
 To simulate the database I decided to build a mock database with sqllite and populate it in the set up with some sample data. This wasn't quite ideal because it didn't exactly replicate the database, but it allowed me to check if the applications worked for selected cases. For example, when checking service #4 implementation B, I could see if the output is correct for words which appear in the table once, twice or not at all.
 
-This didn't solve the problem of the import failing when trying to connect to the original database. This was even more difficult to solve. In the end I managed to try and prevent it from connecting to the managed database by using an environmental variable in the connection strings in the apps, defaulting to the managed database's ip if no variable is provided. I then run pytest with the environmental variable of 'sqllite:///test.db' to 'intercept' the connection.
-
-```app.config['KEY'] = 'KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", default="mysql+pymysql://julia:pass@XXXXL:3306/spanish_app
-```
 This allowed me to test against a mockdatabase. One feature still missing is testing whether data added inside service #1 is actually being added to the database so this will need to be added.
 
 
@@ -281,9 +274,3 @@ PLAY RECAP *********************************************************************
 35.199.180.194             : ok=11   changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 35.247.22.119              : ok=16   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
-
-# Evaluation
-
-I was able to plan and execute the CI pipeline, using all the technologies included in the brief. Despite deploying a docker stack inside a swarm there is currently an outage during the update which will have to be improved. There are also some security issues as sensitive information should be stored in environmental variables.
-
-Using a database to generate objects, as well as passing objects from one service to another significantly added to the complexity of the project. Consequently, much more time was spent debugging and testing. If I could start all over again I would probably select simpler methods of generating objects to ensure that I have plenty of time to troubleshoot ansible and docker swarm. However, the challenge was definitely a good learning experience 
