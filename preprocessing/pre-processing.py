@@ -36,7 +36,7 @@ with open("preprocessing/links.csv") as links:
         links_list.append(row)
 
 
-#sqlalchemy
+#sqlalchemy - creating models for tables
 engine = create_engine('mysql+pymysql://julia:julia123@localhost/spanish_app', echo=True)
 
 Base = declarative_base()
@@ -72,20 +72,19 @@ class Links(Base):
         return "<es_sentences(id_1='%s', id_2='%s')>" % (
                                 self.id_1, self.id_2)
 
+# adding data to tables
+
 Base.metadata.create_all(engine)
-
-
-
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
-#for row in sentences_list:
-#    if int(row[0]) > 1276:
-#        entry = En_sentences(id = row[0], en_sentence=row[1])
-#        session.add(entry)
-#        session.commit()
+for row in sentences_list:
+    if int(row[0]) > 1276:
+        entry = En_sentences(id = row[0], en_sentence=row[1])
+        session.add(entry)
+        session.commit()
 
 
 for row in spa_sentences_list:
@@ -93,8 +92,8 @@ for row in spa_sentences_list:
     session.add(entry)
     session.commit()
 
-#for row in links_list:
-#    if int(row[0]) > 47193 and int(row[0]) < 413869:
-#        entry = Links(id_1 = row[0], id_2=row[1])
-#        session.add(entry)
-#        session.commit()
+for row in links_list:
+    if int(row[0]) > 47193 and int(row[0]) < 413869:
+        entry = Links(id_1 = row[0], id_2=row[1])
+        session.add(entry)
+        session.commit()
