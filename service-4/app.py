@@ -11,8 +11,8 @@ from sqlalchemy.ext.automap import automap_base
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL",default="mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app")
+app.config['SECRET_KEY'] = getenv("KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy(app)
 
@@ -25,17 +25,12 @@ def learning():
     word = request.data.decode('latin-1')
     like_word = '%' + word + '%'
     try:
-        all_records = db.session.query(Review).filter(Review.word==word).count()
-        if all_records == 0:
-            return "New word: review in 2 days"
-        if all_records == 1:
-            return "Review in 7 days"
-        if all_records ==2:
-            return "Review in 14 days"
-        else:
-            return "Review in 30 days"
+        all_records = db.session.query(Review).filter(Review.word==word)
+        records = [i.revision_date for i in all_records]
+        record = str(records[-2])
     except:
-        return "New word: review in 2 days"
+        return "New word"
+    return Response(str(record))
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5003)

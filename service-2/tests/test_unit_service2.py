@@ -21,6 +21,8 @@ c.execute('''CREATE TABLE IF NOT EXISTS vocab
 # Save (commit) the changes
 conn.commit()
 
+
+
 from app import app,Vocab,db
 
 
@@ -48,6 +50,6 @@ class TestBase(TestCase):
 
 class TestResponse(TestBase):
     def test_words(self):
-        all_words = [(bytes(i.en_word,'utf-8')) for i in db.session.query(Vocab).all()]
+        all_words = [(bytes(i.es_word,'utf-8')) for i in db.session.query(Vocab).all()]
         response = self.client.get(url_for('generate_word')) 
         self.assertIn(response.data, all_words)

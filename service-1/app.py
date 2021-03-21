@@ -5,15 +5,14 @@ import random
 import pymysql
 import mysql.connector
 import datetime
-import sqlite3
 import requests
 from sqlalchemy.ext.automap import automap_base
 import requests
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL",default="mysql+pymysql://julia:julia123@34.105.5.17:3306/spanish_app")
+app.config['SECRET_KEY'] = getenv("KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy(app)
 
@@ -39,7 +38,7 @@ def home():
     review_data = Review(word=word.text, revision_date=datetime.datetime.now())
     db.session.add(review_data)
     db.session.commit()
-    version = 'version B'
+    version = 'version A'
     return render_template('home.html', word=word.text, sentence=sentence.text, learning=learning.text, version=version)
 
 if __name__ == "__main__":
